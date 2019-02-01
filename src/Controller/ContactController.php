@@ -11,6 +11,9 @@ class ContactController extends AbstractController
 {
     /**
      * @Route("/contact", name="contact")
+     * @param Request $request
+     * @param \Swift_Mailer $mailer
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function contact(Request $request, \Swift_Mailer $mailer)
     {
@@ -22,7 +25,7 @@ class ContactController extends AbstractController
 
         $message = (new \Swift_Message('Eposta geldi'))
           ->setFrom($contactFormData['email'])   //formdan gelen eposta
-          ->setTo('bitingmumbler@mailinator.com')
+          ->setTo('zeynel.akcay@kitapyurdu.com')
           ->setBody(
               $contactFormData['message'], 'text\plain' //formdan gelen mesaj
           );

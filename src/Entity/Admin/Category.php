@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Admin;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\ArticleRepository")
+ * @ORM\Entity
  */
-class Article
+
+class Category
 {
     /**
      * @ORM\Id()
@@ -21,29 +22,25 @@ class Article
    */
    private $title;
 
-   /**
-   * @ORM\Column(type="text")
-   */
-   private $body;
-
-   //Getters & Setters
+    /**
+     * @return mixed
+     */
   public function getId(){
     return $this->id;
   }
 
+    /**
+     * @return mixed
+     */
   public function getTitle(){
     return $this->title;
   }
 
-  public function getBody(){
-    return $this->body;
-  }
-
+    /**
+     * @param $title
+     */
   public function setTitle($title){
     $this->title = $title;
   }
 
-  public function setBody($body){
-    $this->body = $body;
-  }
 }

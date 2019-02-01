@@ -1,7 +1,8 @@
 <?php
-namespace App\Controller ;
+namespace App\Controller\Admin ;
 
-use App\Entity\Article;
+
+use App\Entity\Admin\Article;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -9,30 +10,32 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-use App\Service\ArticleService as ServiceArticle;
+
 
 
 class ArticleController extends AbstractController {
 
+    private $articleService;
+
     /**
-     * @Route("/article", name="article_list")
-     * @Method ({"GET"})
+     * @Route ("/admin/article", name="article_list")
+     * @return Response
      */
     public function article(){
-
-        $article  = new ServiceArticle($this->getDoctrine()->getManager(),Article::class);
-        $articles = $article->getAllArticles();
+        $this->articleService = $this->container->get('article.service');
+        $articles = $this->articleService->getAllArticles();
         return $this->render('articles/index.html.twig', array
         ('articles' => $articles));
     }
 
     /**
-     * @Route ("/article/new", name="new_article")
-     * Method ({"GET", "POST"})
+     * @Route ("/admin/article/new", name="new_article")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function new(Request $request){
+
         $article = new Article();
 
         $form = $this->createFormBuilder($article)
@@ -48,8 +51,8 @@ class ArticleController extends AbstractController {
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
-            $article = $form->getData();
 
+            $article = $form->getData();
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($article);
             $entityManager->flush();
@@ -63,25 +66,27 @@ class ArticleController extends AbstractController {
     }
 
     /**
-     * @Route ("/article/{id}", name= "article_show")
-     * @Method ({"GET"})
+     * @Route ("/admin/article/{id}", name= "article_show")
+     * @param $id
+     * @return Response
      */
 
     public function show($id){
-        $article  = new ServiceArticle($this->getDoctrine()->getManager(),Article::class);
-        $article = $article->getArticle($id);
+        $this->articleService = $this->container->get('article.service');
+        $article = $this->articleService->getArticle($id);
         return $this->render('articles/show.html.twig', array('article' =>$article));
-
     }
 
     /**
-     * @Route ("/article/update/{id}", name="update_article")
-     * Method ({"GET", "POST"})
+     * @Route ("/admin/article/update/{id}", name="update_article")
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
 
     public function update(Request $request, $id){
-
-        $article = $this->getDoctrine()->getRepository(Article::class)->find($id);
+        $this->articleService = $this->container->get('article.service');
+        $article = $this->articleService->getArticle($id);
 
         $form = $this->createFormBuilder($article)
             ->add('title', TextType::class, array('attr' =>array('class' => 'form-control')))
@@ -97,8 +102,7 @@ class ArticleController extends AbstractController {
 
         if($form->isSubmitted() && $form->isValid()){
 
-            $article  = new ServiceArticle($this->getDoctrine()->getManager(),Article::class);
-            $article->addArticle();
+            $this->articleService->addArticle($form->getData());
 
             return $this->redirectToRoute('article_list');
         }
@@ -109,16 +113,24 @@ class ArticleController extends AbstractController {
     }
 
     /**
-     * @Route ("/article/delete/{id}")
-     * @Method ({"DELETE"})
+     * @Route ("/admin/article/delete/{id}")
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
 
-    public function delete(Request $request, $id){
-
-        $article  = new ServiceArticle($this->getDoctrine()->getManager(),Article::class);
-        $article->deleteArticle($id);
-
+    public function delete($id){
+        $this->articleService = $this->container->get('article.service');
+        $this->articleService->deleteArticle($id);
         return $this->redirectToRoute('article_list');
+    }
+
+
+    public static function getSubscribedServices()
+    {
+        return array_merge(parent::getSubscribedServices(), [
+            // ...
+            'article.service' => \App\Service\Admin\ArticleService::class,
+        ]);
     }
 }
 

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title%}New Article {% endblock %}
+
+{% block body %}
+
+ <h1>Yeni Kategori Ekle</h1>
+
+  {{ form_start(category_form) }}
+  {{ form_widget(category_form) }}
+  {{ form_end (category_form) }}
+
+{% endblock %}

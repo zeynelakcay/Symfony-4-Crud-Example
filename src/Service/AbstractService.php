@@ -23,9 +23,11 @@ abstract class AbstractService
     protected $em;
 
     /**
+     * AbstractService constructor.
      * @param EntityManager $em
-     * @param $entityName
+     * @param $entityName,
      */
+
     protected function __construct(EntityManager $em, $entityName)
     {
         $this->em = $em;

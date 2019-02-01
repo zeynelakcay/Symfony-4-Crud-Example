@@ -29,3 +29,21 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Service\Admin\CategoryService: '@category.service'
+    category.service:
+        class: App\Service\Admin\CategoryService
+        public: true
+        arguments:
+            $em: '@doctrine.orm.entity_manager'
+            $entityName: 'App\Entity\Admin\Category'
+
+    App\Service\Admin\ArticleService: '@article.service'
+    article.service:
+        class: App\Service\Admin\ArticleService
+        public: true
+        arguments:
+            $em: '@doctrine.orm.entity_manager'
+            $entityName: 'App\Entity\Admin\Article'
+
+

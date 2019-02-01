@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title%} Articles {% endblock %}
+
+{% block body %}
+
+    {% if categories %}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Category Title</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {%  for category in categories %}
+                <tr>
+                    <td>{{ category.title }}</td>
+                    <td>
+                        <a href="/article/{{ category.id }}" class="btn btn-dark">Show</a>
+                    </td>
+                    <td>
+                        <a href="/article/update/{{ category.id }}" class="btn btn-info">Update</a>
+                    </td>
+                    <td>
+                        <a href="/article/delete/{{ category.id }}" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Kategori Bulunamadı</p>
+    {% endif %}
+
+{% endblock %}
