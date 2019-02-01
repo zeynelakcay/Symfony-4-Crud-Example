@@ -2,6 +2,7 @@
 
 namespace App\Entity\Admin;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,24 +24,43 @@ class Category
    private $title;
 
     /**
-     * @return mixed
+     * @ORM\OneToMany(targetEntity="App\Entity\Admin\Article", mappedBy="category")
      */
-  public function getId(){
-    return $this->id;
-  }
+    private $articles;
+
+    public function __construct()
+    {
+        $this->articles = new ArrayCollection();
+    }
+
+    /**
+     * @return Collection|Product[]
+     */
+    public function getProducts(): Collection
+    {
+        return $this->articles;
+    }
 
     /**
      * @return mixed
      */
-  public function getTitle(){
-    return $this->title;
-  }
 
-    /**
-     * @param $title
-     */
-  public function setTitle($title){
-    $this->title = $title;
-  }
+      public function getId(){
+        return $this->id;
+      }
+
+        /**
+         * @return mixed
+         */
+      public function getTitle(){
+        return $this->title;
+      }
+
+        /**
+         * @param $title
+         */
+      public function setTitle($title){
+        $this->title = $title;
+      }
 
 }

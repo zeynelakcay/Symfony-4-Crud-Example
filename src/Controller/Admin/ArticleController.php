@@ -6,6 +6,7 @@ use App\Entity\Admin\Article;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ArticleController extends AbstractController {
 
     private $articleService;
-
+    private $categoryService;
     /**
      * @Route ("/admin/article", name="article_list")
      * @return Response
@@ -37,8 +38,16 @@ class ArticleController extends AbstractController {
     public function new(Request $request){
 
         $article = new Article();
+        $this->categoryService = $this->container->get('category.service');
+        $categories = $this->categoryService->getCategories();
+
+        var_dump($categories);
+        
 
         $form = $this->createFormBuilder($article)
+            ->add('category', ChoiceType::class, array(
+                'choices' => $categories
+            ))
             ->add('title', TextType::class, array('attr' =>array('class' => 'form-control')))
             ->add('body', TextareaType::class, array('required' =>false,
                 'attr' =>array('class' =>'form-control')))
@@ -130,6 +139,7 @@ class ArticleController extends AbstractController {
         return array_merge(parent::getSubscribedServices(), [
             // ...
             'article.service' => \App\Service\Admin\ArticleService::class,
+            'category.service' => \App\Service\Admin\CategoryService::class,
         ]);
     }
 }

@@ -27,7 +27,26 @@ class Article
    */
    private $body;
 
-   //Getters & Setters
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Admin\Category", inversedBy="articles")
+     */
+    private $category;
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+
+    //Getters & Setters
   public function getId(){
     return $this->id;
   }
