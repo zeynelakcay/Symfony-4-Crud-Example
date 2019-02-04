@@ -18,9 +18,9 @@ class CategoryService extends AbstractService
         parent::__construct($em, $entityName);
     }
 
-    public function getCategory($article_id)
+    public function getCategory($category_id)
     {
-        return $this->find($article_id);
+        return $this->find($category_id);
     }
 
     public function getCategories()

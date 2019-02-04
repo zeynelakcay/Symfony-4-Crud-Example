@@ -38,16 +38,21 @@ class ArticleController extends AbstractController {
     public function new(Request $request){
 
         $article = new Article();
+        $categoryArray = array();
+        $this->articleService = $this->container->get('article.service');
+
         $this->categoryService = $this->container->get('category.service');
         $categories = $this->categoryService->getCategories();
 
-        var_dump($categories);
-        
+
+        foreach ($categories as $category){
+            $categoryArray[$category->getTitle()] = $category->getId();
+        }
+
+
 
         $form = $this->createFormBuilder($article)
-            ->add('category', ChoiceType::class, array(
-                'choices' => $categories
-            ))
+            ->add('category', ChoiceType::class, array('placeholder' => 'Lütfen Seçim Yapınız','choices' => $categoryArray))
             ->add('title', TextType::class, array('attr' =>array('class' => 'form-control')))
             ->add('body', TextareaType::class, array('required' =>false,
                 'attr' =>array('class' =>'form-control')))
@@ -57,17 +62,40 @@ class ArticleController extends AbstractController {
             ))
             ->getForm();
 
-        $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
 
-            $article = $form->getData();
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($article);
-            $entityManager->flush();
 
-            return $this->redirectToRoute('article_list');
+
+        if ($request->getRealMethod() == 'POST') {
+
+
+
+
+
+
+
+
+            if(1){
+               // $article = $form->getData();
+                $category = $this->categoryService->getCategory($request->request->get("form")['category']);
+                $article->setCategory($category);
+                $form->handleRequest($request);
+                $form->setData($article);
+
+                dd($article);
+                exit();
+
+
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($article);
+                $entityManager->flush();
+
+
+                return $this->redirectToRoute('article_list');
+            }
         }
+
+
 
         return $this->render('articles/new.html.twig',array(
             'form'=>$form->createView()

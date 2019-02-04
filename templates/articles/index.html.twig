@@ -8,6 +8,7 @@
     <table class="table table-striped">
       <thead>
         <tr>
+          <th>Article ID</th>
           <th>Article Title</th>
           <th>Actions</th>
         </tr>
@@ -15,15 +16,16 @@
       <tbody>
         {%  for article in articles %}
           <tr>
+            <td>{{ article.id }}</td>
             <td>{{ article.title }}</td>
             <td>
-              <a href="/article/{{ article.id }}" class="btn btn-dark">Show</a>
+              <a href="/admin/article/{{ article.id }}" class="btn btn-dark">Show</a>
             </td>
             <td>
-              <a href="/article/update/{{ article.id }}" class="btn btn-info">Update</a>
+              <a href="/admin/article/update/{{ article.id }}" class="btn btn-info">Update</a>
             </td>
             <td>
-              <a href="/article/delete/{{ article.id }}" class="btn btn-danger">Delete</a>
+              <a href="/admin/article/delete/{{ article.id }}" class="btn btn-danger">Delete</a>
             </td>
           </tr>
         {% endfor %}

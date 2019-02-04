@@ -3,6 +3,7 @@
 namespace App\Entity\Admin;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -34,9 +35,9 @@ class Category
     }
 
     /**
-     * @return Collection|Product[]
+     * @return Collection
      */
-    public function getProducts(): Collection
+    public function getArticles(): Collection
     {
         return $this->articles;
     }
